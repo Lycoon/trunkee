@@ -8,7 +8,6 @@ glm::mat4 Camera::GetViewMatrix() const
 void Camera::UpdateProjMatrix()
 {
 	m_projMatrix = glm::perspective(glm::radians(m_fov), m_aspect, m_zNear, m_zFar);
-	//m_projMatrix[1][1] *= -1;
 }
 
 void Camera::Update()
@@ -27,20 +26,20 @@ void Camera::Update()
 
 void Camera::MoveForward(float delta)
 {
-	m_position += m_direction * m_speed * delta;
+	m_position += m_front * m_speed * delta;
 }
 
 void Camera::MoveBackward(float delta)
 {
-	m_position -= m_direction * m_speed * delta;
+	m_position -= m_front * m_speed * delta;
 }
 
 void Camera::MoveLeft(float delta)
 {
-	m_position -= glm::normalize(glm::cross(m_direction, DEFAULT_UP)) * m_speed * delta;
+	m_position -= glm::normalize(glm::cross(m_front, DEFAULT_UP)) * m_speed * delta;
 }
 
 void Camera::MoveRight(float delta)
 {
-	m_position += glm::normalize(glm::cross(m_direction, DEFAULT_UP)) * m_speed * delta;
+	m_position += glm::normalize(glm::cross(m_front, DEFAULT_UP)) * m_speed * delta;
 }

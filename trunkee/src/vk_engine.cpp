@@ -742,7 +742,7 @@ void VulkanEngine::InitScene()
 
 	_renderables.push_back(monkey);
 
-	for (int x = -20; x <= 20; x++) {
+	/*for (int x = -20; x <= 20; x++) {
 		for (int y = -20; y <= 20; y++) {
 
 			RenderObject tri;
@@ -754,7 +754,7 @@ void VulkanEngine::InitScene()
 
 			_renderables.push_back(tri);
 		}
-	}
+	}*/
 }
 
 void VulkanEngine::InitDescriptors()
@@ -852,7 +852,10 @@ void VulkanEngine::DrawObjects(VkCommandBuffer cmd, RenderObject* first, int cou
 		}
 
 		glm::mat4 model = object.transformMatrix;
-		glm::mat4 MVP = _camera.GetProjMatrix() * _camera.GetViewMatrix() * model;
+
+		glm::mat4 projMatrix = _camera.GetProjMatrix();
+		glm::mat4 viewMatrix = _camera.GetViewMatrix();
+		glm::mat4 MVP = projMatrix * viewMatrix * model;
 
 		MeshPushConstants constants;
 		constants.render_matrix = MVP;

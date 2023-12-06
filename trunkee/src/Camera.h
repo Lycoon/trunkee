@@ -16,15 +16,13 @@ public:
 	constexpr static float DEFAULT_ZNEAR = 0.1f;
 	constexpr static float DEFAULT_ZFAR = 200.f;
 	constexpr static float DEFAULT_SPEED = 0.1f;
-	constexpr static float DEFAULT_YAW = 90.0f;
-	constexpr static float DEFAULT_PITCH = 0.1f;
+	constexpr static float DEFAULT_YAW = -90.0f;
+	constexpr static float DEFAULT_PITCH = 0.0f;
 
 	Camera(): 
+		m_up(DEFAULT_UP),
 		m_position(DEFAULT_POSITION),
-		m_direction(glm::normalize(m_position - DEFAULT_TARGET)),
-		m_front(DEFAULT_TARGET - DEFAULT_POSITION),
-		m_right(glm::normalize(glm::cross(DEFAULT_UP, m_direction))),
-		m_up(glm::cross(m_direction, m_right))
+		m_front(glm::normalize(DEFAULT_TARGET - DEFAULT_POSITION))
 	{ UpdateProjMatrix(); Update(); }
 
 	Camera(glm::vec3 position) : m_position(position) { UpdateProjMatrix(); }
@@ -55,8 +53,6 @@ private:
 	glm::mat4 m_projMatrix{};
 
 	glm::vec3 m_position;
-	glm::vec3 m_direction;
-
 	glm::vec3 m_front;
 	glm::vec3 m_right;
 	glm::vec3 m_up;
