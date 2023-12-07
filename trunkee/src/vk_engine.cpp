@@ -742,7 +742,7 @@ void VulkanEngine::InitScene()
 
 	_renderables.push_back(monkey);
 
-	/*for (int x = -20; x <= 20; x++) {
+	for (int x = -20; x <= 20; x++) {
 		for (int y = -20; y <= 20; y++) {
 
 			RenderObject tri;
@@ -754,7 +754,7 @@ void VulkanEngine::InitScene()
 
 			_renderables.push_back(tri);
 		}
-	}*/
+	}
 }
 
 void VulkanEngine::InitDescriptors()
