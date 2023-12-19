@@ -5,6 +5,8 @@
 #include "vk_engine.h"
 #include "vk_types.h"
 #include "vk_initializers.h"
+#include "event/EventManager.h"
+#include "time/Time.h"
 
 #include <SDL.h>
 #include <SDL_vulkan.h>
@@ -31,8 +33,9 @@ void VulkanEngine::Init()
 {
 	// We initialize SDL and create a window with it. 
 	SDL_Init(SDL_INIT_VIDEO);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
-	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN);
+	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
 
 	_window = SDL_CreateWindow(
 		"Trunkee",
@@ -422,21 +425,27 @@ void VulkanEngine::Draw()
 
 void VulkanEngine::Run()
 {
-	SDL_Event e;
-	bool bQuit = false;
+	Time& time = Time::Get();
+	EventManager& eventManager = EventManager::Get();
 
-	//main loop
-	while (!bQuit)
+	const auto GetKey = [&](const EventManager::EventData& event)
 	{
-		//Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
-		{
-			//close the window when user alt-f4s or clicks the X button			
-			if (e.type == SDL_QUIT)
-			{
-				bQuit = true;
-			}
-		}
+		SDL_Keycode virtualKey = event.key.keysym.sym;
+		std::string keyName = SDL_GetKeyName(virtualKey);
+		std::cout << "Key pressed: " << keyName << std::endl;
+	};
+
+	eventManager.AddListener(GetKey, EventType::KEY_DOWN);
+
+	_camera.Print();
+
+	bool needsQuit = false;
+	while (!needsQuit)
+	{
+		time.OnFrameStart();
+		eventManager.Poll(needsQuit);
+
+		_camera.Update();
 
 		Draw();
 	}

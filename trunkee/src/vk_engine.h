@@ -10,7 +10,9 @@
 #include <functional>
 #include <deque>
 #include <glm/glm.hpp>
+
 #include "Camera.h"
+#include "event/EventManager.h"
 
 constexpr unsigned int FRAME_OVERLAP = 2;
 

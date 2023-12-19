@@ -148,15 +148,21 @@
   <ItemGroup>
     <ClCompile Include="..\libs\vk-bootstrap-0.7\VkBootstrap.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\event\EventDispatcher.cpp" />
+    <ClCompile Include="src\event\EventManager.cpp" />
+    <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Time.cpp" />
+    <ClCompile Include="src\time\Time.cpp" />
     <ClCompile Include="src\vk_engine.cpp" />
     <ClCompile Include="src\vk_initializers.cpp" />
     <ClCompile Include="src\vk_mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Time.h" />
+    <ClInclude Include="src\event\EventDispatcher.h" />
+    <ClInclude Include="src\event\EventManager.h" />
+    <ClInclude Include="src\input\InputManager.h" />
+    <ClInclude Include="src\time\Time.h" />
     <ClInclude Include="src\vk_engine.h" />
     <ClInclude Include="src\vk_initializers.h" />
     <ClInclude Include="src\vk_mesh.h" />
