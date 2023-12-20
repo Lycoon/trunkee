@@ -435,7 +435,7 @@ void VulkanEngine::Run()
 		std::cout << "Key pressed: " << keyName << std::endl;
 	};
 
-	eventManager.AddListener(GetKey, EventType::KEY_DOWN);
+	eventManager.AddListener(GetKey, EventType::KeyDown);
 
 	_camera.Print();
 

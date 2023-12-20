@@ -7,7 +7,7 @@
 class Camera
 {
 public:
-	constexpr static glm::vec3 DEFAULT_UP = { 0.f, 1.f, 0.f };
+	constexpr static glm::vec3 WORLD_UP = { 0.f, 1.f, 0.f };
 	constexpr static glm::vec3 DEFAULT_POSITION = { 0.f, 0.f, 3.f };
 	constexpr static glm::vec3 DEFAULT_TARGET = { 0.f, 0.f, 0.f };
 
@@ -35,8 +35,8 @@ public:
 	float GetZFar(float zFar) const { return m_zFar; }
 
 	glm::mat4 GetViewMatrix() const;
-	glm::vec3 GetPosition() const { return m_position; }
 	glm::mat4 GetProjMatrix() const { return m_projMatrix; }
+	glm::vec3 GetPosition() const { return m_position; }
 
 	void MoveForward(float deltaTime);
 	void MoveBackward(float deltaTime);
@@ -54,10 +54,10 @@ public:
 private:
 	glm::mat4 m_projMatrix{};
 
-	glm::vec3 m_position;
-	glm::vec3 m_front;
 	glm::vec3 m_right;
-	glm::vec3 m_up;
+	glm::vec3 m_front = glm::normalize(DEFAULT_TARGET - DEFAULT_POSITION);
+	glm::vec3 m_up = WORLD_UP;
+	glm::vec3 m_position = DEFAULT_POSITION;
 
 	float m_fov = DEFAULT_FOV;
 	float m_aspect = DEFAULT_ASPECT;

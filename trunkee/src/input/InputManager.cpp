@@ -17,11 +17,11 @@ bool InputManager::IsActive(KeybindAction action) const
 
 void InputManager::SetDefaultKeybinds()
 {
-	m_keybinds[KeybindAction::MOVE_FRONT] = { { SDL_SCANCODE_W },	   { SDL_SCANCODE_UP } };
-	m_keybinds[KeybindAction::MOVE_BACK]  = { { SDL_SCANCODE_S },	   { SDL_SCANCODE_DOWN } };
-	m_keybinds[KeybindAction::MOVE_LEFT]  = { { SDL_SCANCODE_A },	   { SDL_SCANCODE_LEFT } };
-	m_keybinds[KeybindAction::MOVE_RIGHT] = { { SDL_SCANCODE_D },	   { SDL_SCANCODE_RIGHT } };
-	m_keybinds[KeybindAction::MOVE_UP]    = { { SDL_SCANCODE_SPACE },  { SDL_SCANCODE_UNKNOWN } };
-	m_keybinds[KeybindAction::MOVE_DOWN]  = { { SDL_SCANCODE_LCTRL },  { SDL_SCANCODE_UNKNOWN } };
-	m_keybinds[KeybindAction::MOVE_FAST]  = { { SDL_SCANCODE_LSHIFT }, { SDL_SCANCODE_UNKNOWN } };
+	m_keybinds[KeybindAction::MoveFront] = { { SDL_SCANCODE_W },	   { SDL_SCANCODE_UP } };
+	m_keybinds[KeybindAction::MoveBack]  = { { SDL_SCANCODE_S },	   { SDL_SCANCODE_DOWN } };
+	m_keybinds[KeybindAction::MoveLeft]  = { { SDL_SCANCODE_A },	   { SDL_SCANCODE_LEFT } };
+	m_keybinds[KeybindAction::MoveRight] = { { SDL_SCANCODE_D },	   { SDL_SCANCODE_RIGHT } };
+	m_keybinds[KeybindAction::MoveUp]    = { { SDL_SCANCODE_SPACE },   { SDL_SCANCODE_UNKNOWN } };
+	m_keybinds[KeybindAction::MoveDown]  = { { SDL_SCANCODE_LCTRL },   { SDL_SCANCODE_UNKNOWN } };
+	m_keybinds[KeybindAction::MoveFast]  = { { SDL_SCANCODE_LSHIFT },  { SDL_SCANCODE_UNKNOWN } };
 }

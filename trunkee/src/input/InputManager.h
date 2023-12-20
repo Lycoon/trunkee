@@ -7,13 +7,13 @@
 
 enum class KeybindAction
 {
-	MOVE_FRONT,
-	MOVE_BACK,
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	MOVE_UP,
-	MOVE_DOWN,
-	MOVE_FAST
+	MoveFront,
+	MoveBack,
+	MoveLeft,
+	MoveRight,
+	MoveUp,
+	MoveDown,
+	MoveFast
 };
 
 struct Keybind

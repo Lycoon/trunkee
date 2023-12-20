@@ -10,25 +10,25 @@
 
 enum class EventType
 {
-	PROGRAM_QUIT,
+	ProgramQuit,
 
-	WINDOW_EVENT,
-	WINDOW_RESIZE,
-	WINDOW_HIDDEN,
-	WINDOW_SHOWN,
-	WINDOW_EXPOSED,
-	WINDOW_MOVED,
-	WINDOW_MINIMIZED,
-	WINDOW_MAXIMIZED,
-	WINDOW_CLOSED,
+	WindowEvent,
+	WindowResize,
+	WindowHidden,
+	WindowShown,
+	WindowExposed,
+	WindowMoved,
+	WindowMinimized,
+	WindowMaximized,
+	WindowClosed,
 
-	KEY_DOWN, 
-	KEY_UP,
+	KeyDown,
+	KeyUp,
 
-	MOUSE_CLICK, 
-	MOUSE_RELEASE, 
-	MOUSE_MOVE, 
-	MOUSE_WHEEL
+	MouseClick,
+	MouseRelease,
+	MouseMove,
+	MouseWheel
 };
 
 class EventManager

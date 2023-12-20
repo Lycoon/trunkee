@@ -43,57 +43,57 @@ void EventManager::AddListener(Listener listener, EventType type)
 
 void EventManager::OnQuit()
 {
-	for (Listener& listener : m_listeners[EventType::PROGRAM_QUIT])
+	for (Listener& listener : m_listeners[EventType::ProgramQuit])
 		listener({});
 }
 
 void EventManager::OnKeyDown(const SDL_KeyboardEvent& e)
 {
 	InputManager::Get().SetKeyPressed(e.keysym.scancode, true);
-	for (Listener& listener : m_listeners[EventType::KEY_DOWN])
+	for (Listener& listener : m_listeners[EventType::KeyDown])
 		listener({ e });
 }
 
 void EventManager::OnKeyUp(const SDL_KeyboardEvent& e)
 {
 	InputManager::Get().SetKeyPressed(e.keysym.scancode, false);
-	for (Listener& listener : m_listeners[EventType::KEY_UP])
+	for (Listener& listener : m_listeners[EventType::KeyUp])
 		listener({ e });
 }
 
 void EventManager::OnMouseClick(const SDL_MouseButtonEvent& e)
 {
-	for (Listener& listener : m_listeners[EventType::MOUSE_CLICK])
+	for (Listener& listener : m_listeners[EventType::MouseClick])
 		listener({ e });
 }
 
 void EventManager::OnMouseRelease(const SDL_MouseButtonEvent& e)
 {
-	for (Listener& listener : m_listeners[EventType::MOUSE_RELEASE])
+	for (Listener& listener : m_listeners[EventType::MouseRelease])
 		listener({ e });
 }
 
 void EventManager::OnMouseMove(const SDL_MouseMotionEvent& e)
 {
-	for (Listener& listener : m_listeners[EventType::MOUSE_MOVE])
+	for (Listener& listener : m_listeners[EventType::MouseMove])
 		listener({ e });
 }
 
 void EventManager::OnMouseWheel(const SDL_MouseWheelEvent& e)
 {
-	for (Listener& listener : m_listeners[EventType::MOUSE_WHEEL])
+	for (Listener& listener : m_listeners[EventType::MouseWheel])
 		listener({ e });
 }
 
 void EventManager::OnWindowEvent(const SDL_WindowEvent& e)
 {
-	for (Listener& listener : m_listeners[EventType::WINDOW_EVENT])
+	for (Listener& listener : m_listeners[EventType::WindowEvent])
 		listener({ e });
 
 	if (e.event == SDL_WINDOWEVENT_RESIZED)
-		for (Listener& listener : m_listeners[EventType::WINDOW_RESIZE])
+		for (Listener& listener : m_listeners[EventType::WindowResize])
 			listener({ e });
 	else if (e.event == SDL_WINDOWEVENT_CLOSE)
-		for (Listener& listener : m_listeners[EventType::WINDOW_CLOSED])
+		for (Listener& listener : m_listeners[EventType::WindowClosed])
 			listener({ e });
 }

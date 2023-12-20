@@ -3,27 +3,27 @@
 #include "input/InputManager.h"
 #include "time/Time.h"
 
-Camera::Camera() : m_up(DEFAULT_UP), m_position(DEFAULT_POSITION), m_front(glm::normalize(DEFAULT_TARGET - DEFAULT_POSITION))
+Camera::Camera()
 {
 	EventManager& eventManager = EventManager::Get();
 	const auto UpdateCameraMouseView = [&](const EventManager::EventData& event)
 	{
 		UpdateMouseView(event.mouseMotion.xrel, event.mouseMotion.yrel);
 	};
-	eventManager.AddListener(UpdateCameraMouseView, EventType::MOUSE_MOVE);
+	eventManager.AddListener(UpdateCameraMouseView, EventType::MouseMove);
 
 	UpdateProjMatrix();
 	UpdateAxis();
 }
 
-Camera::Camera(glm::vec3 position) : m_position(position) 
+Camera::Camera(glm::vec3 position) : m_position(position)
 { 
 	UpdateProjMatrix();
 }
 
 glm::mat4 Camera::GetViewMatrix() const
 {
-	return glm::lookAt(m_position, m_position + m_front, m_up);
+	return glm::lookAt(m_position, m_position + m_front, WORLD_UP);
 }
 
 void Camera::UpdateProjMatrix()
@@ -36,17 +36,17 @@ void Camera::Update()
 	InputManager& inputManager = InputManager::Get();
 	float deltaTime = Time::Get().GetDeltaTime();
 
-	if (inputManager.IsActive(KeybindAction::MOVE_FRONT))
+	if (inputManager.IsActive(KeybindAction::MoveFront))
 		MoveForward(deltaTime);
-	if (inputManager.IsActive(KeybindAction::MOVE_BACK))
+	if (inputManager.IsActive(KeybindAction::MoveBack))
 		MoveBackward(deltaTime);
-	if (inputManager.IsActive(KeybindAction::MOVE_LEFT))
+	if (inputManager.IsActive(KeybindAction::MoveLeft))
 		MoveLeft(deltaTime);
-	if (inputManager.IsActive(KeybindAction::MOVE_RIGHT))
+	if (inputManager.IsActive(KeybindAction::MoveRight))
 		MoveRight(deltaTime);
-	if (inputManager.IsActive(KeybindAction::MOVE_UP))
+	if (inputManager.IsActive(KeybindAction::MoveUp))
 		MoveUp(deltaTime);
-	if (inputManager.IsActive(KeybindAction::MOVE_DOWN))
+	if (inputManager.IsActive(KeybindAction::MoveDown))
 		MoveDown(deltaTime);
 }
 
@@ -72,8 +72,8 @@ void Camera::UpdateAxis()
 	newFront.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 
 	m_front = glm::normalize(newFront);
-	m_right = glm::normalize(glm::cross(m_front, DEFAULT_UP));
-	m_up = glm::normalize(glm::cross(m_right, m_front));
+	m_right = glm::normalize(glm::cross(m_front, WORLD_UP));
+	m_up = glm::normalize(glm::cross(m_front, m_right));
 }
 
 void Camera::MoveForward(float deltaTime)
@@ -98,12 +98,12 @@ void Camera::MoveRight(float deltaTime)
 
 void Camera::MoveUp(float deltaTime)
 {
-	m_position += DEFAULT_UP * m_speed * deltaTime;
+	m_position += WORLD_UP * m_speed * deltaTime;
 }
 
 void Camera::MoveDown(float deltaTime)
 {
-	m_position -= DEFAULT_UP * m_speed * deltaTime;
+	 m_position-= WORLD_UP * m_speed * deltaTime;
 }
 
 void Camera::Print() const
