@@ -52,11 +52,9 @@ public:
 	void UpdateProjMatrix();
 
 private:
-	glm::mat4 m_projMatrix{};
+	glm::mat4 m_projMatrix;
 
-	glm::vec3 m_right;
 	glm::vec3 m_front = glm::normalize(DEFAULT_TARGET - DEFAULT_POSITION);
-	glm::vec3 m_up = WORLD_UP;
 	glm::vec3 m_position = DEFAULT_POSITION;
 
 	float m_fov = DEFAULT_FOV;

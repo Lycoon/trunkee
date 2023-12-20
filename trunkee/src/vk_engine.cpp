@@ -428,15 +428,6 @@ void VulkanEngine::Run()
 	Time& time = Time::Get();
 	EventManager& eventManager = EventManager::Get();
 
-	const auto GetKey = [&](const EventManager::EventData& event)
-	{
-		SDL_Keycode virtualKey = event.key.keysym.sym;
-		std::string keyName = SDL_GetKeyName(virtualKey);
-		std::cout << "Key pressed: " << keyName << std::endl;
-	};
-
-	eventManager.AddListener(GetKey, EventType::KeyDown);
-
 	_camera.Print();
 
 	bool needsQuit = false;

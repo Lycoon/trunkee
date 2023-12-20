@@ -102,8 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_FORCE_XYZW_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(SolutionDir)libs\glm;$(SolutionDir)libs\SDL2-2.28.5\include;$(SolutionDir)libs\imgui-1.89.8;$(SolutionDir)libs\vk-bootstrap-0.7;$(SolutionDir)libs\tiny_obj_loader;$(SolutionDir)libs\vk-mem-allocator-3.0.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
