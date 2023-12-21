@@ -536,22 +536,26 @@ bool VulkanEngine::CompileShaderFromFile(const char* shaderPath, const char* sha
 	std::string fullShaderPath(SHADER_FOLDER);
 	fullShaderPath += shaderPath;
 
+	// Load the shader file
 	if (!LoadFile(fullShaderPath.c_str(), shaderContent))
 	{
 		std::cerr << "[SHADER] Could not load file " << shaderPath << std::endl;
 		return false;
 	}
 
+	// Setting up the compiler
 	shaderc::Compiler compiler;
 	shaderc::CompileOptions options;
 	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
 
+	// Compiling the shader to SPIRV
 	shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(
 		shaderContent.data(), shaderContent.size(), 
 		(shaderc_shader_kind)shaderType, 
 		shaderPath, shaderEntryPoint,
 		options);
 
+	// Check if the compilation was successful
 	if (module.GetCompilationStatus() != shaderc_compilation_status_success)
 	{
 		std::cerr << "[SHADER] Could not compile file " << shaderPath << std::endl;
@@ -559,6 +563,7 @@ bool VulkanEngine::CompileShaderFromFile(const char* shaderPath, const char* sha
 		return false;
 	}
 
+	// Copy the shader binary to the output parameter
 	shaderBinary.resize(module.cend() - module.cbegin());
 	memcpy(shaderBinary.data(), module.cbegin(), shaderBinary.size() * sizeof(uint32_t));
 

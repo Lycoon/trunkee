@@ -20,8 +20,8 @@ public:
 	constexpr static float DEFAULT_PITCH = 0.f;
 	constexpr static float DEFAULT_SENSITIVITY = 0.1f;
 
+public:
 	Camera();
-	Camera(glm::vec3 position);
 
 	Camera& WithFOV(float fov) { m_fov = fov; UpdateProjMatrix(); return *this; }
 	Camera& WithAspect(float aspect) { m_aspect = aspect; UpdateProjMatrix(); return *this; }

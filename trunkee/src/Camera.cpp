@@ -15,11 +15,6 @@ Camera::Camera()
 	UpdateProjMatrix();
 }
 
-Camera::Camera(glm::vec3 position) : m_position(position)
-{ 
-	UpdateProjMatrix();
-}
-
 glm::mat4 Camera::GetViewMatrix() const
 {
 	return glm::lookAtRH(m_position, m_position + m_front, WORLD_UP);
