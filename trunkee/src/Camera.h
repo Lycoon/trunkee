@@ -22,7 +22,7 @@ public:
 
 public:
 	Camera();
-
+	
 	Camera& WithFOV(float fov) { m_fov = fov; UpdateProjMatrix(); return *this; }
 	Camera& WithAspect(float aspect) { m_aspect = aspect; UpdateProjMatrix(); return *this; }
 	Camera& WithZNear(float zNear) { m_zNear = zNear; UpdateProjMatrix(); return *this; }
@@ -38,8 +38,8 @@ public:
 	glm::mat4 GetProjMatrix() const { return m_projMatrix; }
 	glm::vec3 GetPosition() const { return m_position; }
 
-	void MoveForward(float deltaTime);
-	void MoveBackward(float deltaTime);
+	void MoveFront(float deltaTime);
+	void MoveBack(float deltaTime);
 	void MoveLeft(float deltaTime);
 	void MoveRight(float deltaTime);
 	void MoveUp(float deltaTime);

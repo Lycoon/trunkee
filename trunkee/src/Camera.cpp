@@ -32,9 +32,9 @@ void Camera::Update()
 	float deltaTime = Time::Get().GetDeltaTime();
 
 	if (inputManager.IsActive(KeybindAction::MoveFront))
-		MoveForward(deltaTime);
+		MoveFront(deltaTime);
 	if (inputManager.IsActive(KeybindAction::MoveBack))
-		MoveBackward(deltaTime);
+		MoveBack(deltaTime);
 	if (inputManager.IsActive(KeybindAction::MoveLeft))
 		MoveLeft(deltaTime);
 	if (inputManager.IsActive(KeybindAction::MoveRight))
@@ -68,12 +68,12 @@ void Camera::UpdateAxis()
 	m_front = glm::normalize(newFront);
 }
 
-void Camera::MoveForward(float deltaTime)
+void Camera::MoveFront(float deltaTime)
 {
 	m_position += m_front * m_speed * deltaTime;
 }
 
-void Camera::MoveBackward(float deltaTime)
+void Camera::MoveBack(float deltaTime)
 {
 	m_position -= m_front * m_speed * deltaTime;
 }

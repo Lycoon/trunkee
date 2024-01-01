@@ -15,8 +15,7 @@
 #include <fstream>
 #include <sstream>
 
-//we want to immediately abort when there is an error. In normal engines this would give an error message to the user, or perform a dump of state.
-using namespace std;
+// We want to immediately abort when there is an error. In normal engines this would give an error message to the user, or perform a dump of state.
 #define VK_CHECK(x)                                                 \
 	do                                                              \
 	{                                                               \
@@ -28,6 +27,7 @@ using namespace std;
 		}                                                           \
 	} while (0)
 
+const char* ENGINE_NAME = "Trunkee";
 
 void VulkanEngine::Init()
 {
@@ -36,16 +36,7 @@ void VulkanEngine::Init()
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
-
-	_window = SDL_CreateWindow(
-		"Trunkee",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		_windowExtent.width,
-		_windowExtent.height,
-		window_flags
-	);
-
+	_window = SDL_CreateWindow(ENGINE_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _windowExtent.width, _windowExtent.height, window_flags);
 	_camera = Camera().WithFOV(80.f);
 
 	InitVulkan();
@@ -66,46 +57,36 @@ void VulkanEngine::Init()
 void VulkanEngine::InitVulkan()
 {
 	vkb::InstanceBuilder builder;
-
-	//make the Vulkan instance, with basic debug features
-	auto inst_ret = builder.set_app_name("Trunkee")
+	auto inst_ret = builder.set_app_name(ENGINE_NAME)
 		.request_validation_layers(true)
-		.require_api_version(1, 1, 0)
+		.require_api_version(1, 3, 243)
 		.use_default_debug_messenger()
 		.build();
 
 	vkb::Instance vkb_inst = inst_ret.value();
-
-	//store the instance
 	_instance = vkb_inst.instance;
-	//store the debug messenger
 	_debug_messenger = vkb_inst.debug_messenger;
-
-	// get the surface of the window we opened with SDL
+	
 	SDL_Vulkan_CreateSurface(_window, _instance, &_surface);
 
-	//use vkbootstrap to select a GPU.
-	//We want a GPU that can write to the SDL surface and supports Vulkan 1.1
+	// Use vkbootstrap to select a GPU.
+	// We want a GPU that can write to the SDL surface and supports Vulkan 1.3
 	vkb::PhysicalDeviceSelector selector{ vkb_inst };
 	vkb::PhysicalDevice physicalDevice = selector
-		.set_minimum_version(1, 1)
+		.set_minimum_version(1, 3)
 		.set_surface(_surface)
 		.select()
 		.value();
 
-	//create the final Vulkan device
+	// Create the final Vulkan device
 	vkb::DeviceBuilder deviceBuilder{ physicalDevice };
-
 	vkb::Device vkbDevice = deviceBuilder.build().value();
-
-	// Get the VkDevice handle used in the rest of a Vulkan application
 	_device = vkbDevice.device;
 	_chosenGPU = physicalDevice.physical_device;
-	// use vkbootstrap to get a Graphics queue
 	_graphicsQueue = vkbDevice.get_queue(vkb::QueueType::graphics).value();
 	_graphicsQueueFamily = vkbDevice.get_queue_index(vkb::QueueType::graphics).value();
 
-	//initialize the memory allocator
+	// Initialize the memory allocator
 	VmaAllocatorCreateInfo allocatorInfo = {};
 	allocatorInfo.physicalDevice = _chosenGPU;
 	allocatorInfo.device = _device;
@@ -116,16 +97,14 @@ void VulkanEngine::InitVulkan()
 void VulkanEngine::InitSwapchain()
 {
 	vkb::SwapchainBuilder swapchainBuilder{ _chosenGPU, _device, _surface };
-
 	vkb::Swapchain vkbSwapchain = swapchainBuilder
 		.use_default_format_selection()
-		//use vsync present mode
-		.set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR)
+		.set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR) // Use VSync present mode
 		.set_desired_extent(_windowExtent.width, _windowExtent.height)
 		.build()
 		.value();
 
-	//store swapchain and its related images
+	// Store swapchain and its related images
 	_swapchain = vkbSwapchain.swapchain;
 	_swapchainImages = vkbSwapchain.get_images().value();
 	_swapchainImageViews = vkbSwapchain.get_image_views().value();
@@ -135,33 +114,31 @@ void VulkanEngine::InitSwapchain()
 		vkDestroySwapchainKHR(_device, _swapchain, nullptr);
 	});
 
-	//depth image size will match the window
+	// Depth image size will match the window
 	VkExtent3D depthImageExtent = {
 		_windowExtent.width,
 		_windowExtent.height,
 		1
 	};
 
-	//hardcoding the depth format to 32 bit float
+	// Hardcoding the depth format to 32 bit float
 	_depthFormat = VK_FORMAT_D32_SFLOAT;
 
-	//the depth image will be an image with the format we selected and Depth Attachment usage flag
+	// The depth image will be an image with the format we selected and Depth Attachment usage flag
 	VkImageCreateInfo dimg_info = vkinit::image_create_info(_depthFormat, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depthImageExtent);
 
-	//for the depth image, we want to allocate it from GPU local memory
+	// For the depth image, we want to allocate it from GPU local memory
 	VmaAllocationCreateInfo dimg_allocinfo = {};
 	dimg_allocinfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 	dimg_allocinfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	//allocate and create the image
+	// Allocate and create the image
 	vmaCreateImage(_allocator, &dimg_info, &dimg_allocinfo, &_depthImage._image, &_depthImage._allocation, nullptr);
 
-	//build an image-view for the depth image to use for rendering
+	// Build an image-view for the depth image to use for rendering
 	VkImageViewCreateInfo dview_info = vkinit::imageview_create_info(_depthFormat, _depthImage._image, VK_IMAGE_ASPECT_DEPTH_BIT);
-
 	VK_CHECK(vkCreateImageView(_device, &dview_info, nullptr, &_depthImageView));
 
-	//add to deletion queues
 	_mainDeletionQueue.push_function([=]() {
 		vkDestroyImageView(_device, _depthImageView, nullptr);
 		vmaDestroyImage(_allocator, _depthImage._image, _depthImage._allocation);
@@ -401,7 +378,7 @@ void VulkanEngine::Draw()
 	submit.pWaitSemaphores = &GetCurrentFrame()._presentSemaphore;
 
 	submit.signalSemaphoreCount = 1;
-	submit.pSignalSemaphores = &GetCurrentFrame()._presentSemaphore;
+	submit.pSignalSemaphores = &GetCurrentFrame()._renderSemaphore;
 
 	submit.commandBufferCount = 1;
 	submit.pCommandBuffers = &cmd;
@@ -518,9 +495,8 @@ bool VulkanEngine::LoadFile(const char* filePath, std::string& fileContent)
 {
 	std::ifstream file(filePath);
 
-	if (!file.is_open()) {
+	if (!file.is_open())
 		return false;
-	}
 
 	std::stringstream strStream;
 	strStream << file.rdbuf();
@@ -532,11 +508,11 @@ bool VulkanEngine::LoadFile(const char* filePath, std::string& fileContent)
 
 bool VulkanEngine::CompileShaderFromFile(const char* shaderPath, const char* shaderEntryPoint, ShaderType shaderType, std::vector<uint32_t>& shaderBinary)
 {
-	std::string shaderContent;
 	std::string fullShaderPath(SHADER_FOLDER);
 	fullShaderPath += shaderPath;
 
 	// Load the shader file
+	std::string shaderContent;
 	if (!LoadFile(fullShaderPath.c_str(), shaderContent))
 	{
 		std::cerr << "[SHADER] Could not load file " << shaderPath << std::endl;
@@ -547,6 +523,8 @@ bool VulkanEngine::CompileShaderFromFile(const char* shaderPath, const char* sha
 	shaderc::Compiler compiler;
 	shaderc::CompileOptions options;
 	options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
+	options.SetTargetSpirv(shaderc_spirv_version_1_6);
+	options.SetForcedVersionProfile(460, shaderc_profile_core);
 
 	// Compiling the shader to SPIRV
 	shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(
